@@ -1,9 +1,9 @@
-import './App.css';
+import ComponentDidMount from './components/ComponentDidMount';
 
 function App() {
   return (
     <>
-
+      <ComponentDidMount />
     </>
   );
 }
