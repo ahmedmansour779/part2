@@ -6,6 +6,7 @@ export default function FirstFetch() {
 
     const [term, setTerm] = useState("")
     const [result, setresult] = useState([])
+    const [numper, setnumper] = useState(1)
 
     useEffect(() => {
         const search = async () => {
@@ -28,9 +29,9 @@ export default function FirstFetch() {
     const fetchResult = result.map((e) => {
         return (
             <tr key={e.pageid}>
-                <th scope='row'>{e.index}</th>
+                <th scope='row'>{numper}</th>
                 <td>{e.title}</td>
-                <td>{e.snippet}</td>
+                <td><span dangerouslySetInnerHTML={{ "__html": e.snippet }} /></td>
             </tr>
         )
     })
