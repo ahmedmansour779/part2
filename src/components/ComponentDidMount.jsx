@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 
 export default function ComponentDidMount() {
     const [name, setName] = useState("")
@@ -22,7 +22,7 @@ export default function ComponentDidMount() {
     //useEffect
     //update the state -> re-render (sec render)
     //UseEffect -> watcher -> dependency -> name ? updated -> yes -> do the effect / no -> skip the effect
-    // useEffect(() => {
+    // ! useEffect(() => {
     //ADD UR CODE
     //   if (name || phone) {
     //     console.log("update");
@@ -36,7 +36,7 @@ export default function ComponentDidMount() {
     //useEffect with no dependency array
     //run when update happen
     //when: run after first render, and after re-render
-    // useEffect(() => {
+    // ! useEffect(() => {
     //   console.log("effect");
     // });
 
@@ -45,9 +45,32 @@ export default function ComponentDidMount() {
     //re render
     //use Effect
 
-    useEffect(() => {
-        console.log("useEffect with empty dependency array")
-    }, [])
+    // ------------------------------------- //
+    //clean up
+
+    // ! useEffect(() => {
+    //     const timeOut = setTimeout(() => {
+    //         console.log("effect");
+    //     }, 2000);
+
+    //     return () => {
+    //         clearTimeout(timeOut);
+    //     };
+    // }, [name]);
+
+    //render
+    //use effect  x1
+    //return / init clean up
+
+    //change state
+    //render
+    //clean up excute
+    //useEffect -> watcher -> name updated -> run
+    //return / init clean up
+
+    // ! useEffect(() => {
+    //     console.log("useEffect with empty dependency array")
+    // }, [])
 
     //useEffect with one value dependency
     //run after change in this value
@@ -55,18 +78,25 @@ export default function ComponentDidMount() {
 
     useEffect(() => {
         if (name || phone) {
-            console.log("useEffect with one value dependency,value name or phone is not fulse")
+            console.log("useEffect with two value dependency,value name or phone is not fulse and not use clean up")
         }
     }, [name, phone]);
 
-    console.log("test")
+    useEffect(() => {
+        return () => {
+            if (name || phone) {
+                console.log("useEffect with two value dependency,value name or phone is not fulse and use clean up")
+            }
+        }
+    }, [name, phone]);
+
     return (
         <div>
             <div className="App">
                 <label>Name </label>
                 <input onChange={(e) => setName(e.target.value)} value={name} />
                 <br />
-                <label>phone {console.log("test 2")} </label>
+                <label>phone </label>
                 <input onChange={(e) => setPhone(e.target.value)} value={phone} />
                 <p>
                     name: {name} <br /> phone: {phone}
