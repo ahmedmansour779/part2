@@ -6,7 +6,6 @@ export default function FirstFetch() {
 
     const [term, setTerm] = useState("")
     const [result, setresult] = useState([])
-    const [numper, setnumper] = useState(1)
 
     useEffect(() => {
         const search = async () => {
@@ -20,16 +19,28 @@ export default function FirstFetch() {
                 }
             })
             setresult(respond.data.query.search)
+        };
+
+        if (result.length) {
+            if (term) {
+                search()
+            }
+        } else {
+            const debounceSearch = setTimeout(() => {
+                if (term) {
+                    search()
+                }
+            }, 1000)
+            return () => {
+                clearTimeout(debounceSearch)
+            }
         }
-        if (term) {
-            search()
-        }
-    }, [term])
+    }, [term, result.length])
 
     const fetchResult = result.map((e) => {
         return (
             <tr key={e.pageid}>
-                <th scope='row'>{numper}</th>
+                <th scope='row'>{e.index}</th>
                 <td>{e.title}</td>
                 <td><span dangerouslySetInnerHTML={{ "__html": e.snippet }} /></td>
             </tr>
