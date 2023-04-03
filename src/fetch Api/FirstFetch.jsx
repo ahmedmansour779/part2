@@ -6,6 +6,14 @@ export default function FirstFetch() {
 
     const [term, setTerm] = useState("")
     const [result, setresult] = useState([])
+    const [debounceSearch, setdebounceSearch] = useState(term)
+
+    useEffect(() => {
+        const timeOut = setTimeout(() => {
+            setdebounceSearch(term)
+        }, 1200);
+        return () => clearTimeout(timeOut)
+    }, [term])
 
     useEffect(() => {
         const search = async () => {
@@ -15,27 +23,32 @@ export default function FirstFetch() {
                     list: 'search',
                     origin: '*',
                     format: 'json',
-                    srsearch: term,
+                    srsearch: debounceSearch,
                 }
             })
             setresult(respond.data.query.search)
         };
 
-        if (result.length) {
-            if (term) {
-                search()
-            }
-        } else {
-            const debounceSearch = setTimeout(() => {
-                if (term) {
-                    search()
-                }
-            }, 1000)
-            return () => {
-                clearTimeout(debounceSearch)
-            }
-        }
-    }, [term, result.length])
+        search()
+    }, [debounceSearch])
+
+    // useEffect(() => {
+
+    //     if (result.length) {
+    //         if (term) {
+    //             search()
+    //         }
+    //     } else {
+    //         const debounceSearch = setTimeout(() => {
+    //             if (term) {
+    //                 search()
+    //             }
+    //         }, 1000)
+    //         return () => {
+    //             clearTimeout(debounceSearch)
+    //         }
+    //     }
+    // }, [term, result.length])
 
     const fetchResult = result.map((e) => {
         return (
