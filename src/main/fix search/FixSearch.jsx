@@ -1,19 +1,16 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import axios from "axios";
+import { useEffect, useRef, useState } from "react";
 
-
-export default function FirstFetch() {
-
+export default function FixSearch() {
     const [term, setTerm] = useState("")
     const [result, setresult] = useState([])
-    const [debounceSearch, setdebounceSearch] = useState(term)
+    const termUseRef = useRef()
 
     useEffect(() => {
-        const timeOut = setTimeout(() => {
-            setdebounceSearch(term)
-        }, 1200);
-        return () => clearTimeout(timeOut)
-    }, [term])
+        termUseRef.current = term
+    })
+
+    const prevTerm = termUseRef.current;
 
     useEffect(() => {
         const search = async () => {
@@ -23,46 +20,43 @@ export default function FirstFetch() {
                     list: 'search',
                     origin: '*',
                     format: 'json',
-                    srsearch: debounceSearch,
+                    srsearch: term,
                 }
             })
             setresult(respond.data.query.search)
         };
 
-        search()
-    }, [debounceSearch])
+        if (result.length) {
+            if (term) {
+                search()
+            }
+        } else if (prevTerm !== term) {
+            const debounceSearch = setTimeout(() => {
+                if (term) {
+                    search()
+                }
+            }, 1000)
+            return () => {
+                clearTimeout(debounceSearch)
+            }
+        }
+    }, [term, result.length, prevTerm])
 
-    // useEffect(() => {
-
-    //     if (result.length) {
-    //         if (term) {
-    //             search()
-    //         }
-    //     } else {
-    //         const debounceSearch = setTimeout(() => {
-    //             if (term) {
-    //                 search()
-    //             }
-    //         }, 1000)
-    //         return () => {
-    //             clearTimeout(debounceSearch)
-    //         }
-    //     }
-    // }, [term, result.length])
-
-    const fetchResult = result.map((e) => {
+    const fetchResult = result.map((el) => {
         return (
-            <tr key={e.pageid}>
-                <th scope='row'>{e.index}</th>
-                <td>{e.title}</td>
-                <td><span dangerouslySetInnerHTML={{ "__html": e.snippet }} /></td>
+            <tr key={el.pageid}>
+                <td>1</td>
+                <td>{el.title}</td>
+                <td>
+                    <span dangerouslySetInnerHTML={{ __html: el.snippet }} />
+                </td>
             </tr>
-        )
-    })
+        );
+    });
 
     return (
         <div className='container'>
-            <h1>First fetch</h1>
+            <h1>Fix search</h1>
             <div className='row'>
                 <div className='col'>
                     <div className='my-3'>
@@ -77,8 +71,11 @@ export default function FirstFetch() {
                             value={term}
                         />
                     </div>
+                    <p>Current term: {term}</p>
+                    <p>Prev Term: {prevTerm}</p>
                 </div>
             </div>
+
             <div className='row'>
                 <div className='col'>
                     <table className='table'>
@@ -89,9 +86,7 @@ export default function FirstFetch() {
                                 <th scope='col'>Desc</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {fetchResult}
-                        </tbody>
+                        <tbody>{fetchResult}</tbody>
                     </table>
                 </div>
             </div>

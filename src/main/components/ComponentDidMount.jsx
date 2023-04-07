@@ -92,7 +92,9 @@ export default function ComponentDidMount() {
 
     return (
         <div>
+            <h1>Components</h1>
             <div className="App">
+
                 <label>Name </label>
                 <input onChange={(e) => setName(e.target.value)} value={name} />
                 <br />

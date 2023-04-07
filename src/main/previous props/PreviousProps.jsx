@@ -12,6 +12,7 @@ export default function PreviousPropsState() {
 
     return (
         <div className='container'>
+            <h1>Previous Props State</h1>
             <div className='row'>
                 <div className='col'>
                     <div className='my-3'>
